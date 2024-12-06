@@ -3,7 +3,8 @@ function tsp_ls(distance_matrix) {
     if (n <= 1) return 0;
 
     let currentRoute = [...Array(n).keys()];
-        let pathVal = countPathLength(currentRoute, distance_matrix);
+    shuffleArray(currentRoute);
+    let pathVal = countPathLength(currentRoute, distance_matrix);
 
     const maxIterate = factorial(n); // or use a smaller number like n * n for practical purposes
     for (let iter = 0; iter < maxIterate; iter++) {
