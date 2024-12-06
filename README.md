@@ -51,4 +51,45 @@ What is the worst-case asymptotic time complexity of your implementation? What
 is the worst-case asymptotic memory complexity? Add your answer, including your
 reasoning, to this markdown file.
 
+So the tsp_ls function initializes the array and calls the shuffleArray function at the start. This take $O(n)$ time to shuffle. Then the countPathLength function is called and finds the intial route and calculates the distance. This also takes $O(n)$ time. The main loop is based off of the maxIterate and is $O(n!)$ because maxIterate = factorial(n). So, for each iteration the two indices $i$ and $k$ are picked randomly which is a constant time. The twoOptSwap function swaps the two parts of the route and this also takes $O(n)$ time because it might go over the route and reverse a section of it. Then the countPathLength finds the new path length and that take $O(n)$ time also. So you have each iteration in the main loop taking $O(n)$ time and in the worst case the loop will run $n!$ times. The worst case time complexity is $O(n*n!)$
+
+Memory wise the distance matrix is a $n*n$ matrix where $n$ is the cities. This equals $O(n^2)$. The currentRoute array stores the routes and is just $n$ for its length. The newRoute array inside the twoOptSwap function is just a copy of the currentRoute array so it is also just $n$ The temporary values all take constant space. The factorial function only keeps one integer in memory each recursive call so this is also $n$ for the recursion stack. So the worst case memory complexity is going to be the distance matrix at $O(n^2)$.
+ 
+
+I had a friend Dexter look over my tsp_ls function because it wasn't working correctly when I wass testing in vscode. I was being dumb and using $n$ instead of $n-1$ for $i$ and $k$ and I think it was causing some sort of index access issue. This is the function before he helped me
+
+```javascript
+function tsp_ls(distance_matrix) {
+    let n = distance_matrix.length;
+    if (n <= 1) return 0;
+
+    let currentRoute = [...Array(n).keys()];
+    shuffleArray(currentRoute);
+    let pathVal = countPathLength(currentRoute, distance_matrix);
+
+    const maxIterate = factorial(n); // or use a smaller number like n * n for practical purposes
+    for (let iter = 0; iter < maxIterate; iter++) {
+        let i = Math.floor(Math.random() * (n));
+        let k;
+        do {
+            k = Math.floor(Math.random() * (n));
+        } while (k === i);
+
+        const newRoute = twoOptSwap(currentRoute, i, k);
+        const newVal = countPathLength(newRoute, distance_matrix);
+        if (newVal < pathVal) {
+            currentRoute = newRoute;
+            pathVal = newVal;
+        }
+    }
+    return pathVal;
+}
+```
 https://dm865.github.io/assets/dm865-tsp-ls-handout.pdf
+
+https://youtu.be/Gfx9UV2tpLg?si=Jf2A6L4hsiipuWUb
+
+https://www.geeksforgeeks.org/swap-nodes-in-a-linked-list-without-swapping-data/
+
+
+I certify that I have listed all sources used to complete this exercise, including the use of any Large Language Models. All of the work is my own, except where stated otherwise. I am aware that plagiarism carries severe penalties and that if plagiarism is suspected, charges may be filed against me without prior notice."
